@@ -12,7 +12,7 @@
 ├── config
 │   ├── diydict.txt
 │   └── stopwords.txt
-├── pipline
+├── pipeline
 └── src
     ├── urllib
     │   ├── 巨潮2015.xlsx
@@ -34,7 +34,7 @@
 - ***文件夹`config`：外部配置文件***
   - `diydict.txt` 用户自定义词典
   - `stopwords.txt` 用户自定义停用词词典
-- ***文件夹`pipline`：存放计算过程数据***
+- ***文件夹`pipeline`：存放计算过程数据***
 - ***文件夹`src`：存放外部添加的数据***
   - 文件夹`urllib` 由“八抓鱼采集器”爬取的募集说明书获取地址
   - `wind_info_all.csv` Wind上16-21年发行的所有公司债和企业债
