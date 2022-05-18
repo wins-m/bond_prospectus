@@ -1,25 +1,22 @@
 """
 (created by swmao on May 15th)
 文本到因子的计算。
-全局参数： 
+全局参数：
 - is_test: 是否测试（前16行）
 - process_num: 进程数
 - batch_size: 多少文件存一次
 - telling: 运行是否output计算结果
-(May 16th) 
+(May 16th)
 8588个募集书，7进程4.5小时。
 
 """
 import pandas as pd
 import numpy as np
 import os
-import pdfdocx
-from pathlib import Path
-from typing import Tuple, List, Dict
+from Typing import Tuple
 
-        
-# _PATH = r'/Users/winston/Documents/4-2/金融科技与区块链/区块链PROJ/data&code'
-_PATH = r'/mnt/c/Users/Winst/Desktop/data_code'
+_PATH = '.'
+
 
 def get_txt_path(title, src_path, ubuntu=False) -> str:
     if ubuntu:  # macos 文件名中 ':' 在 ubuntu 为 '"'
@@ -44,19 +41,18 @@ def jieba_lcut(text, udict=None) -> list:
 
 
 def word_stopping(words, stop_w_path=None) -> list:
-    
+
     def contains_chinese(strs):
         for _char in strs:
             if '\u4e00' <= _char <= '\u9fa5':
                 return True
         return False
-    
+
     stopwords = []
     if stop_w_path is not None:
         with open(stop_w_path, 'r', encoding='utf-8') as f:
             stopwords = f.readlines()
-    words1 = [w for w in words if (w == '。') or 
-              (w not in stopwords and len(w) > 1 and contains_chinese(w))]
+    words1 = [w for w in words if (w == '。') or (w not in stopwords and len(w) > 1 and contains_chinese(w))]
     return words1
 
 
@@ -64,7 +60,7 @@ def ele_frequency(words1: list, is_sorted=True) -> pd.DataFrame:
     """记录词频"""
     wordfreqs = [(w, words1.count(w)) for w in set(words1) if w != '。']
     if is_sorted:
-        wordfreqs = sorted(wordfreqs, key=lambda k:k[1], reverse=True)  # 根据词频进行排序
+        wordfreqs = sorted(wordfreqs, key=lambda k: k[1], reverse=True)  # 根据词频进行排序
     wordfreqs = pd.DataFrame(wordfreqs, columns=['word', 'freq'])
     return wordfreqs
 
@@ -93,11 +89,11 @@ def get_normalized_vector(wordfreqs, max_num=10000, min_w=1e-4) -> pd.Series:
 def title_clean(text, title) -> str:
     """剔除反复出现的标题"""
     title_clean = (title.split(':', maxsplit=1)[-1]).replace(' ', '')
-    return text.replace(title_clean, '')  
+    return text.replace(title_clean, '')
 
 
-def cal_text_factor3(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1, 
-                     src_path, tgt_path, udict_path, stopw_path, max_num=1000, min_w=1e-3, 
+def cal_text_factor3(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1,
+                     src_path, tgt_path, udict_path, stopw_path, max_num=1000, min_w=1e-3,
                      telling=False) -> Tuple[int, dict]:
     """从txt文本，直接算出2个词频变量和1个词频向量"""
     path = get_txt_path(filename, src_path=src_path, ubuntu=True)
@@ -138,12 +134,12 @@ def cal_text_factor3(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1
         print('政策响应1', round(freq1k_policy1, 6))
         print('词频向量', norm_vec.shape, '\n    '+str(norm_vec[:10]).replace('\n','\n    '))
 
-    res = {'Eco': freq1k_eco, 'Policy': freq1k_policy, 
-           'Eco1': freq1k_eco1, 'Policy1': freq1k_policy1, 
-           'Vec': norm_vec, 'VecLen': len(norm_vec), 'CNum': len(text), 
-           'WNum0': len(words), 'WNum1': len(words1), 'WNum2': len(wordfreqs), 
+    res = {'Eco': freq1k_eco, 'Policy': freq1k_policy,
+           'Eco1': freq1k_eco1, 'Policy1': freq1k_policy1,
+           'Vec': norm_vec, 'VecLen': len(norm_vec), 'CNum': len(text),
+           'WNum0': len(words), 'WNum1': len(words1), 'WNum2': len(wordfreqs),
            'SNum': words.count('。'), }
-        
+
     return ir, res
 
 
@@ -156,7 +152,7 @@ def progressbar(cur, total, msg):
 
 
 class FctConstructor(object):
-    
+
     def __init__(self, data, src_path, tgt_path, udict, stopw, telling):
         self.data: pd.DataFrame = data
         self.src_path: str = src_path
@@ -164,7 +160,7 @@ class FctConstructor(object):
         self.udict_path: str = udict
         self.stopw_path: str = stopw
         self.telling = telling
-        
+
         self.norm_vec_temp = {}
         self.cnt_cal3 = 0
         self.norm_vec_temp = []
@@ -196,18 +192,18 @@ class FctConstructor(object):
         for ir in self.data.index:
             title = self.data.loc[ir, 'title']
             filename = self.data.loc[ir, 'filename']
-            ind = self.data.loc[ir, 'id']
-            pool.apply_async(cal_text_factor3, 
-                             args=(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1, 
-                                   self.src_path, self.tgt_path,  self.udict_path, self.stopw_path, 
-                                   max_num, min_w, self.telling), 
+            # ind = self.data.loc[ir, 'id']
+            pool.apply_async(cal_text_factor3,
+                             args=(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1,
+                                   self.src_path, self.tgt_path,  self.udict_path, self.stopw_path,
+                                   max_num, min_w, self.telling),
                              callback=call_back)
         pool.close()
         pool.join()
 
         self.norm_vec = pd.DataFrame(self.norm_vec_temp).reset_index().rename(columns={'index':'id'})
         return self.data, self.norm_vec
-        
+
     def cal_fct3_file_by_file(self, kw_eco, kw_policy, kw_eco1, kw_policy1, max_num, min_w):
         Vec = []  # pd.DataFrame()
 
@@ -235,18 +231,18 @@ class FctConstructor(object):
             cur_date = self.data.loc[ir, 'date']
             cur_name = self.data.loc[ir, 'name']
             progressbar(self.cnt_cal3, len(self.data), msg=f" {cur_date} {cur_name}")
-            
+
         self.norm_vec = pd.DataFrame(Vec).reset_index().rename(columns={'index':'id'})  # Vec.T
         return self.data, self.norm_vec
-    
+
 
 def factor_construct(src_file, src_path, fval_path, fvec_path, text_path, 
                      is_test, process_num, batch_size, telling, 
                      max_num, min_w, kw_eco, kw_policy, kw_eco1, kw_policy1, udict, stopw):
-    
+
     src = pd.read_csv(src_file)
     src['id'] = src.index
-    
+
     # Generate stopping words dict
     with open(udict, 'w', encoding='utf-8') as f:
         f.write('\n'.join(['碳中和', ]) + '\n')
@@ -291,19 +287,19 @@ def factor_construct(src_file, src_path, fval_path, fvec_path, text_path,
         fvec_file = f'{fvec_path}tvec_{suffix}.csv'
         target_fvalue.to_csv(fval_file, index=None)
         target_fvector.to_csv(fvec_file, index=None)
-        
-        
+
+
 def main():
-    
+
     # Input:
     src_file = f'{_PATH}/src/parse_target_all.csv'  # 募集书样本
     src_path = f'{_PATH}/src/all_text/'  # 存放pdf2txt生成的txt文本
-    
+
     # Output:
-    fval_path = f'{_PATH}/pipline/target_fvalue/'  # 募集书记录+id+因子值*2
-    fvec_path = f'{_PATH}/pipline/target_fvector/'  # id+词向量
-    text_path = f'{_PATH}/pipline/text_splitted/'  # 存放新生成的 分词/停用/分句 后的txt文本
-    
+    fval_path = f'{_PATH}/pipeline/target_fvalue/'  # 募集书记录+id+因子值*2
+    fvec_path = f'{_PATH}/pipeline/target_fvector/'  # id+词向量
+    text_path = f'{_PATH}/pipeline/text_splitted/'  # 存放新生成的 分词/停用/分句 后的txt文本
+
     # Config:
     is_test = False
     process_num = 7
@@ -325,11 +321,11 @@ def main():
                 '国用','财政','市政府','行政','商务部','公共设施']
     udict = f'{_PATH}/config/diydict.txt'
     stopw = f'{_PATH}/config/stopwords.txt'
-    
+
     # Run:
     factor_construct(src_file, src_path, fval_path, fvec_path, text_path, 
                      is_test, process_num, batch_size, telling, 
                      max_num, min_w, kw_eco, kw_policy, kw_eco1, kw_policy1, udict, stopw)
-    
+
 if __name__ == '__main__':
     main()

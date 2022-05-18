@@ -52,7 +52,7 @@ def myMLR(X, Y) -> pd.DataFrame:
 
 
 def cal_fct_heter(Y, Y_hat) -> pd.DataFrame:
-    def cal_ssr(Y, Y_hat): 
+    def cal_ssr(Y, Y_hat):
         return (Y - Y_hat).apply(lambda s: np.sum(s**2)).rename('SSR')
 
     def cal_sst(Y):
@@ -89,7 +89,7 @@ def cal_text_factor_heter(panel):
 
 
 class FacHeter(object):
-    
+
     def __init__(self, data, fvec):
         self.data = data.reset_index(drop=True)
         self.id_info = data.set_index('date')[['id']].sort_index()
@@ -106,9 +106,9 @@ class FacHeter(object):
             fvec = fvec[fvec > fvec.min()]
             fvec /= fvec.sum()
         return len(w_id), fvec
-        
-    def calculat(self, w_len): 
-        self.data[f'Heter{w_len}'] = np.nan  
+
+    def calculat(self, w_len):
+        self.data[f'Heter{w_len}'] = np.nan
         self.data[f'DocNum{w_len}'] = -1
         self.data[f'Info{w_len}'] = np.nan
         self.data[f'Stdd{w_len}'] = np.nan
@@ -147,7 +147,7 @@ def factor_construct_bundle(path_fval, path_fvec, min_sentence_num, min_unique_w
     fct_value = pd.read_csv(path_fval)
     fct_value = drop_problematic_fct_info(fct_value, min_sentence_num, min_unique_word_num)
     print(f"去重后 样本债券{len(fct_value)}只，绿色债券{fct_value['isGreen'].sum()}只")
-    # fct_value.to_csv(f'{_PATH}/pipline/without_heter.csv')
+    # fct_value.to_csv(f'{_PATH}/pipeline/without_heter.csv')
     fct_value['date'] = pd.to_datetime(fct_value['date'])  # 公告发行日为准
     freq_vector = pd.DataFrame(pd.read_pickle(path_fvec))
     FH = FacHeter(fct_value, freq_vector)
@@ -158,14 +158,14 @@ def factor_construct_bundle(path_fval, path_fvec, min_sentence_num, min_unique_w
 
 def main():
     # Input:
-    path_fval = f'{_PATH}/pipline/target_fvalue.csv'
-    path_fvec = f'{_PATH}/pipline/target_fvector.pkl'
+    path_fval = f'{_PATH}/pipeline/target_fvalue.csv'
+    path_fvec = f'{_PATH}/pipeline/target_fvector.pkl'
     # Config:
     min_sentence_num = 100
     min_unique_word_num = 1000
     win_len = 90
     # Output:
-    tgt_file = _PATH + '/pipline/target_fvalue{}.csv'
+    tgt_file = _PATH + '/pipeline/target_fvalue{}.csv'
 
     factor_construct_bundle(path_fval, path_fvec, min_sentence_num, min_unique_word_num, win_len, tgt_file)
 

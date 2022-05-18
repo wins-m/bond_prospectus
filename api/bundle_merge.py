@@ -3,11 +3,10 @@
 
 """
 import pandas as pd
-import numpy as np
 import os
 
-# _PATH = r'/Users/winston/Documents/4-2/金融科技与区块链/区块链PROJ/data&code'
 _PATH = r'/mnt/c/Users/Winst/Desktop/data_code'
+
 
 def merge_bundle_results(path, id_set=None) -> pd.DataFrame:
     """合并文本计算后的batch bundle, id_set指定须保留的id"""
@@ -24,7 +23,7 @@ def merge_bundle_results(path, id_set=None) -> pd.DataFrame:
     print(f'\t{len(res)} bundle read, concat ...')
     return pd.concat(res)
 
-    
+
 def bundle_result_merge(fval_path, fvec_path, wind_path_green, tgt_fval, tgt_fvec): 
     target_info = merge_bundle_results(fval_path)  # 样本债券+文本特征+id
     print('样本大小', len(target_info))
@@ -39,14 +38,14 @@ def bundle_result_merge(fval_path, fvec_path, wind_path_green, tgt_fval, tgt_fve
 
 
 def main():
-    fval_path = f'{_PATH}/pipline/target_fvalue/'  # 待合并 募集书信息/因子 目录
-    fvec_path = f'{_PATH}/pipline/target_fvector/'  # 待合并 向量文件 目录
+    fval_path = f'{_PATH}/pipeline/target_fvalue/'  # 待合并 募集书信息/因子 目录
+    fvec_path = f'{_PATH}/pipeline/target_fvector/'  # 待合并 向量文件 目录
     wind_path_green = f'{_PATH}/src/wind_info_gre.csv'  # Wind 绿色债券
-    tgt_fval = f'{_PATH}/pipline/target_fvalue.csv'  # 募集书信息/因子(全部) 存储
-    tgt_fvec = f'{_PATH}/pipline/target_fvector.pkl'  # 词向量(全部) 存为pickle文件
-                                        
+    tgt_fval = f'{_PATH}/pipeline/target_fvalue.csv'  # 募集书信息/因子(全部) 存储
+    tgt_fvec = f'{_PATH}/pipeline/target_fvector.pkl'  # 词向量(全部) 存为pickle文件
     bundle_result_merge(fval_path, fvec_path, wind_path_green, tgt_fval, tgt_fvec)
 
 
 if __name__ == '__main__':
     main()
+
