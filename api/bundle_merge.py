@@ -5,7 +5,8 @@
 import pandas as pd
 import os
 
-_PATH = r'/mnt/c/Users/Winst/Desktop/data_code'
+
+_PATH = '.'
 
 
 def merge_bundle_results(path, id_set=None) -> pd.DataFrame:

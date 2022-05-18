@@ -9,7 +9,7 @@ import os
 import time
 
 
-_PATH = r'/Users/winston/Documents/4-2/金融科技与区块链/区块链PROJ/data&code'
+_PATH = '.'
 
 
 def main():

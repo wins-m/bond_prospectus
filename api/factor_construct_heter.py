@@ -6,8 +6,8 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta
 
-# _PATH = r'/Users/winston/Documents/4-2/金融科技与区块链/区块链PROJ/data&code'
-_PATH = r'/mnt/c/Users/Winst/Desktop/data_code'
+
+_PATH = '.'
 
 
 def url2stockcode(sr: pd.Series) -> pd.Series:
