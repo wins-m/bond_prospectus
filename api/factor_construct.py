@@ -13,7 +13,8 @@
 import pandas as pd
 import numpy as np
 import os
-from Typing import Tuple
+# from Typing import Tuple
+from typing import Tuple
 
 
 _PATH = '.'
@@ -192,7 +193,9 @@ class FctConstructor(object):
         pool = multiprocessing.Pool(pnum)
         for ir in self.data.index:
             title = self.data.loc[ir, 'title']
-            filename = self.data.loc[ir, 'filename']
+            code = self.data.loc[ir, 'code']
+            filename = f"[{code}]{title}.pdf"
+            # filename = self.data.loc[ir, 'filename']
             # ind = self.data.loc[ir, 'id']
             pool.apply_async(cal_text_factor3,
                              args=(title, filename, ir, kw_eco, kw_policy, kw_eco1, kw_policy1,

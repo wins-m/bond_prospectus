@@ -1,0 +1,7 @@
+src/all_pdf/*
+src/all_text/*
+pipeline/target_fvector/*
+pipeline/target_fvalue/*
+pipeline/text_splitted/*
+*.pkl
+
