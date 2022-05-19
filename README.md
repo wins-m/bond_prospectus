@@ -30,7 +30,7 @@
 ```
 
 - `README.md` 说明
-- ***文件夹`api`：代码（git管理）***
+- ***文件夹`api`：代码***
 - ***文件夹`config`：外部配置文件***
   - `diydict.txt` 用户自定义词典
   - `stopwords.txt` 用户自定义停用词词典
