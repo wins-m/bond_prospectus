@@ -19,18 +19,18 @@ def drop_problematic_fct_info(fct_info, min_sentence_num, min_unique_word_num) -
     """根据债券信息&募集书文本特点 筛去不合适的“募集书”记录"""
     shape0 = fct_info.shape
 
-    mask1 = fct_info['SNum'] >= min_sentence_num  
-        # sentence number gt threshold
-    mask2 = fct_info['WNum2'] >= min_unique_word_num  
-        # number of unique non-stopping-word gt threshold
+    # sentence number gt threshold
+    mask1 = fct_info['SNum'] >= min_sentence_num
+    # number of unique non-stopping-word gt threshold
+    mask2 = fct_info['WNum2'] >= min_unique_word_num
     mask = mask1 & mask2
     fct_info = fct_info[mask]
 
-    fct_info = fct_info.sort_values(['date', 'code'], ascending=True)  
-        # 公告发布时间正序排列，优先保留发布时间靠后的公告
-    fct_info = fct_info.loc[
-        fct_info.loc[:, ['date', 'VecLen', 'CNum']].drop_duplicates(keep='last').index] 
-        # PDF完全一致的去重 TODO: pdf_access.py 多个债券的募集书
+    # 公告发布时间正序排列，优先保留发布时间靠后的公告
+    fct_info = fct_info.sort_values(['date', 'code'], ascending=True)
+    mask = fct_info.loc[:, ['date', 'VecLen', 'CNum']].drop_duplicates(keep='last').index
+    # PDF完全一致的去重 TODO: pdf_access.py 多个债券的募集书
+    fct_info = fct_info.loc[mask]
     fct_info = fct_info.reset_index(drop=True)
     print(f"筛选公告: {shape0} -> {fct_info.shape}")
     return fct_info
@@ -52,15 +52,17 @@ def myMLR(X, Y) -> pd.DataFrame:
 
 
 def cal_fct_heter(Y, Y_hat) -> pd.DataFrame:
-    def cal_ssr(Y, Y_hat):
-        return (Y - Y_hat).apply(lambda s: np.sum(s**2)).rename('SSR')
+    """Heter (corrected now)"""
+    def cal_sse(Y, Y_hat):
+        return (Y - Y_hat).apply(lambda s: np.sum(s**2)).rename('SSE')
 
     def cal_sst(Y):
         return Y.apply(lambda s: np.sum((s-s.mean())**2)).rename('SST')
 
-    ssr = cal_ssr(Y, Y_hat)
+    sse = cal_sse(Y, Y_hat)
     sst = cal_sst(Y)
-    heter = (sst - ssr) / ssr
+    ssr = sst - sse
+    heter = sse / ssr
     if heter.iloc[0] <= 0:
         print('\n\n', heter, '\n')
     heter = np.log(heter).rename('Heter')

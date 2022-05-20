@@ -4,4 +4,6 @@ pipeline/target_fvector/*
 pipeline/target_fvalue/*
 pipeline/text_splitted/*
 *.pkl
+*.bak
+.DS_Store
 
