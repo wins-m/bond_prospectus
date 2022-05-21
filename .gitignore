@@ -1,8 +1,8 @@
-src/all_pdf/*
-src/all_text/*
-pipeline/target_fvector/*
-pipeline/target_fvalue/*
-pipeline/text_splitted/*
+src/all_pdf/*.pdf
+src/all_text/*.txt
+pipeline/target_fvector/*.csv
+pipeline/target_fvalue/*.csv
+pipeline/text_splitted/*_*
 *.pkl
 *.bak
 .DS_Store
