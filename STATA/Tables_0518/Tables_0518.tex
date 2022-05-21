@@ -1,0 +1,322 @@
+% redine \input as \expandableinput
+\ExplSyntaxOn
+\cs_new:Npn \expandableinput #1
+{ \use:c { @@input } { \file_full_name:n {#1} } }
+\AddToHook{env/tabular/begin}
+{ \cs_set_eq:NN \expandableinput \expandableinput }
+\ExplSyntaxOff
+
+\documentclass[12pt]{article} 
+\usepackage{ctex}
+\usepackage{setspace} 
+\setstretch{1.25} 
+\usepackage[top=1in,bottom=1in,left =1in,right=1in]{geometry} 
+\usepackage[utf8]{inputenc} 
+\usepackage{tabularx}
+\usepackage{xcolor} 
+\usepackage{comment} 
+\usepackage{array} 
+\usepackage{tikz} 
+\usepackage{booktabs} 
+\usepackage{threeparttable} 
+\usepackage{enumitem} 
+\usepackage{changepage} 
+\usepackage{siunitx}
+\usepackage{natbib} 
+\setlength{\abovetopsep}{4pt} 
+\usepackage[unicode = true , 
+bookmarks = false , 
+breaklinks = false , backref = section , colorlinks = true ]{hyperref} 
+\hypersetup{linkcolor = blue , citecolor = blue , urlcolor = blue} 
+\newcommand{\sym}[1]{{#1}} % for symbols in Table 
+\usepackage[section]{placeins} 
+\usepackage[figuresright]{rotating}
+\usepackage{graphicx}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{extarrows}
+\usepackage[justification = centering]{caption}
+
+
+
+\begin{document}
+
+\begin{table}[htbp]
+	\newcolumntype{C}{>{\centering\arraybackslash}X}
+	\centering
+	\caption{均值标准差}
+	\begin{tabularx}{\linewidth}{lCCCCCCl}
+		\toprule
+		&\multicolumn{2}{c}{\textbf{All}} &\multicolumn{2}{c}{\textbf{Green}} & \multicolumn{2}{c}{\textbf{Non-Green}} &  \\
+		&     mean & sd &   mean & sd & mean & sd & Mean-diff \\
+		\midrule
+		\expandableinput{Summary}
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\begin{sidewaystable}[htbp]
+	\centering
+	\caption{相关系数}
+	\begin{tabular}{lccccccccccc}
+			\toprule
+			\expandableinput{Correlation}
+			\bottomrule
+		\end{tabular}
+\end{sidewaystable}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Eco1，小词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_small_Eco1}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Policy1，小词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_small_Policy1}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，小词典}
+	\begin{tabular}{lcccccc}
+			\toprule
+			\expandableinput{Regress_small_Spread}
+			\bottomrule
+		\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，小词典，加入EcoPolicy交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_small_Spread_EcoPolicy}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，小词典，加入isgreen交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_small_Spread_isgreen}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，小词典}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_small_rating}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，小词典，加入EcoPolicy交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_small_rating_EcoPolicy}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，小词典，加入isgreen交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_small_rating_isgreen}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Eco2，大词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_big_Eco2}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Policy2，大词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_big_Policy2}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，大词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_big_Spread}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，大词典，加入EcoPolicy交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_big_Spread_EcoPolicy}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，大词典，加入isgreen交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Regress_big_Spread_isgreen}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，大词典}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_big_rating}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，大词典，加入EcoPolicy交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_big_rating_EcoPolicy}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，大词典，加入isgreen交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Regress_big_rating_isgreen}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，绿债样本，小词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Green_small_Spread}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，绿债样本，小词典，加入EcoPolicy交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Green_small_Spread_EcoPolicy}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，绿债样本，小词典}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Green_small_rating}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，绿债样本，小词典，加入EcoPolicy交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Green_small_rating_EcoPolicy}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，绿债样本，大词典}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Green_big_Spread}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Y = Spread，绿债样本，大词典，加入EcoPolicy交乘项}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\expandableinput{Green_big_Spread_EcoPolicy}
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，绿债样本，大词典}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Green_big_rating}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Y = rating，绿债样本，大词典，加入EcoPolicy交乘项}
+%	\begin{tabular}{lcccccc}
+%		\toprule
+%		\expandableinput{Green_big_rating_EcoPolicy}
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+
+
+%		\begin{tablenotes}
+%			\item \scriptsize
+%			\begin{adjustwidth}{-0.5cm}{0cm}
+%				%		\begin{flushleft}
+%					Full sample includes all white female NLSY respondents
+%					%		\end{flushleft}
+%			\end{adjustwidth}
+%		\end{tablenotes}
+	
+\end{document}
