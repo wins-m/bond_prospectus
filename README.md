@@ -4,18 +4,35 @@
 .
 ├── README.md
 ├── STATA
+│   ├── Code
+│   ├── Data
+│   ├── Full_0521.dta
+│   ├── Graph_Density.png
+│   ├── Main.do
+│   ├── README.md
+│   ├── Tables_0518
+│   └── Tables_0521
 ├── api
-│   ├── bundle_merge.py
-│   ├── factor_construct.py
-│   ├── factor_construct_heter.py
-│   ├── pdf2txt.py
-│   └── pdf_access.py
+│   ├── bundle_merge.py
+│   ├── factor_construct.py
+│   ├── factor_construct_heter.py
+│   ├── pdf2txt.py
+│   └── pdf_access.py
 ├── config
-│   ├── diydict.txt
-│   └── stopwords.txt
+│   ├── diydict.txt
+│   └── stopwords.txt
 ├── pipeline
+│   ├── target_fvalue
+│   ├── target_fvalue(4425,\ 27).csv
+│   ├── target_fvalue.csv
+│   ├── target_fvector
+│   └── text_splitted
 └── src
+    ├── all_pdf
+    ├── all_text
+    ├── parse_target_all.csv
     ├── urllib
+    ├── urllib_combined.csv
     ├── wind_info_all.csv
     └── wind_info_gre.csv
 ```
@@ -27,7 +44,17 @@
   - `diydict.txt` 用户自定义词典
   - `stopwords.txt` 用户自定义停用词词典
 - ***文件夹`pipeline`: 存放计算过程数据***
+  - 文件夹`target_fvalue` 分段处理的文本指标
+  - `target_fvalue(4425,\ 27).csv` <u>最终的样本文本指标面板</u>
+  - `target_fvalue.csv` 分段处理后文本指标合并
+  - 文件夹`target_fvector` 分段处理的文本词频向量
+  - 文件夹`text_splitted` 分词、停用、分句后的文本，可用作未来研究
+
 - ***文件夹`src`: 存放外部添加的数据***
+  - 文件夹`all_pdf` 下载的原始pdf文件
+  - 文件夹`all_text` 原始pdf读取获得的txt文件
+  - `parse_target_all.csv` 筛选后的样本
+  - `urllib_combined.csv` 从爬虫结果合并的pdf网址记录
   - 文件夹`urllib` 由“八抓鱼采集器”爬取的募集说明书获取地址
   - `wind_info_all.csv` Wind上16-21年发行的所有公司债和企业债
   - `wind_info_gre.csv` Wind上16-21年发行的所有绿色债券
